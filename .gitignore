@@ -1,0 +1,56 @@
+# ==================================================================
+# EduGenie Learning Assistant — .gitignore
+# ==================================================================
+
+# --- Secrets / environment config ---
+.env
+.env.*
+!.env.example
+
+# --- Python virtual environment ---
+venv/
+env/
+.venv/
+
+# --- Python bytecode / caches ---
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# --- Hugging Face / PyTorch model caches ---
+# LaMini-Flan-T5-783M and any other local model weights get cached here
+# by default — this directory alone can be several GB, so it must never
+# be committed.
+.cache/
+huggingface/
+~/.cache/huggingface/
+models/
+*.bin
+*.safetensors
+*.pt
+*.pth
+
+# --- Database files (if using local SQLite) ---
+*.db
+*.sqlite3
+
+# --- VS Code / editor settings ---
+.vscode/
+*.code-workspace
+
+# --- OS-specific junk files ---
+.DS_Store
+Thumbs.db
+
+# --- Logs ---
+*.log
+
+# --- Distribution / build artifacts ---
+build/
+dist/
+*.egg
