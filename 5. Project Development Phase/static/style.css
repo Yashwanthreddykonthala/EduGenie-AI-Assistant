@@ -1,0 +1,662 @@
+/* ==================================================================
+   EduGenie Learning Assistant — Premium Dark Theme Stylesheet
+   Vibrant indigo accents, glowing glassmorphic panels, and transitions.
+   ================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Fira+Code:wght@400;500&display=swap');
+
+:root {
+  /* --- High-end dark color tokens --- */
+  --bg-color: #0b0f19;          /* Deep space background */
+  --bg-gradient: radial-gradient(circle at 50% 50%, #1e1b4b 0%, #0b0f19 100%);
+  --panel-bg: rgba(17, 24, 39, 0.7); /* Translucent dark slate */
+  --panel-border: rgba(255, 255, 255, 0.08);
+  
+  --text-main: #f3f4f6;         /* Bright gray */
+  --text-sub: #9ca3af;          /* Muted gray */
+  
+  /* --- Gradient Accents --- */
+  --accent-primary: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%); /* Indigo glow */
+  --accent-secondary: linear-gradient(135deg, #a855f7 0%, #7e22ce 100%); /* Purple glow */
+  
+  --color-success: #10b981;     /* Emerald */
+  --color-success-bg: rgba(16, 185, 129, 0.15);
+  --color-success-border: rgba(16, 185, 129, 0.3);
+  
+  --color-error: #f43f5e;       /* Rose */
+  --color-error-bg: rgba(244, 63, 94, 0.15);
+  --color-error-border: rgba(244, 63, 94, 0.3);
+  
+  --font-sans: 'Outfit', sans-serif;
+  --font-mono: 'Fira Code', monospace;
+  
+  --radius-panel: 16px;
+  --radius-control: 8px;
+  --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --shadow-glow: 0 0 20px rgba(99, 102, 241, 0.2);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background: var(--bg-color);
+  background-image: var(--bg-gradient);
+  background-attachment: fixed;
+  color: var(--text-main);
+  font-family: var(--font-sans);
+  min-height: 100vh;
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+/* Background decorative orbs */
+body::before, body::after {
+  content: "";
+  position: fixed;
+  width: 400px;
+  height: 400px;
+  border-radius: 50%;
+  filter: blur(120px);
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0.4;
+}
+body::before {
+  top: -100px;
+  left: -100px;
+  background: #4f46e5;
+}
+body::after {
+  bottom: -100px;
+  right: -100px;
+  background: #7e22ce;
+}
+
+/* ==================================================================
+   Authentication Page (authScreen)
+   ================================================================== */
+.auth-screen-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 20px;
+  position: relative;
+}
+
+.auth-card {
+  background: var(--panel-bg);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--panel-border);
+  border-radius: var(--radius-panel);
+  width: 100%;
+  max-width: 440px;
+  padding: 40px;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 10px 10px -5px rgba(0, 0, 0, 0.4), var(--shadow-glow);
+  animation: fade-in-up 0.5s ease-out;
+}
+
+.auth-card-header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.auth-logo {
+  font-size: 2.5rem;
+  font-weight: 700;
+  background: linear-gradient(to right, #a855f7, #6366f1);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 8px;
+  letter-spacing: -0.02em;
+}
+
+.auth-subtitle {
+  color: var(--text-sub);
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+.auth-tabs {
+  display: flex;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: var(--radius-control);
+  padding: 4px;
+  margin-bottom: 30px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.auth-tab-btn {
+  flex: 1;
+  background: none;
+  border: none;
+  padding: 10px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text-sub);
+  cursor: pointer;
+  border-radius: 6px;
+  transition: var(--transition-smooth);
+}
+
+.auth-tab-btn.active {
+  background: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.auth-form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.auth-form-group label {
+  font-size: 0.88rem;
+  font-weight: 500;
+  color: var(--text-sub);
+}
+
+.auth-form-group input {
+  padding: 12px 16px;
+  border: 1px solid var(--panel-border);
+  border-radius: var(--radius-control);
+  font-size: 0.95rem;
+  background-color: rgba(255, 255, 255, 0.03);
+  color: #ffffff;
+  outline: none;
+  transition: var(--transition-smooth);
+  width: 100%;
+}
+
+.auth-form-group input:focus {
+  border-color: #6366f1;
+  background-color: rgba(255, 255, 255, 0.06);
+  box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2);
+}
+
+.btn-full {
+  width: 100%;
+  display: block;
+}
+
+.auth-error {
+  color: var(--color-error);
+  font-weight: 500;
+  margin-top: 10px;
+  font-size: 0.88rem;
+  text-align: center;
+}
+
+.auth-status {
+  margin-top: 10px;
+  font-size: 0.88rem;
+  text-align: center;
+}
+
+.auth-card-footer {
+  margin-top: 30px;
+}
+
+.divider {
+  position: relative;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.divider::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background-color: rgba(255, 255, 255, 0.1);
+  z-index: 1;
+}
+
+.divider-text {
+  position: relative;
+  background-color: #111521;
+  padding: 0 12px;
+  color: var(--text-sub);
+  font-size: 0.85rem;
+  z-index: 2;
+  border-radius: 4px;
+}
+
+.btn-guest {
+  font-weight: 600;
+}
+
+/* ==================================================================
+   Main Dashboard Header
+   ================================================================== */
+.top-nav {
+  background: rgba(17, 24, 39, 0.8);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--panel-border);
+  padding: 14px 24px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.top-nav-container {
+  max-width: 900px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo {
+  font-weight: 700;
+  font-size: 1.4rem;
+  background: linear-gradient(to right, #a855f7, #6366f1);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.auth-section {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  font-size: 0.95rem;
+}
+
+.user-welcome {
+  color: var(--text-main);
+}
+
+.guest-badge {
+  background-color: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--text-sub);
+}
+
+/* ==================================================================
+   Main Workspace Container
+   ================================================================== */
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 40px 24px 80px 24px;
+  animation: fade-in 0.5s ease-out;
+}
+
+.hero {
+  text-align: center;
+  margin-bottom: 50px;
+}
+
+.hero-title {
+  font-size: 2.8rem;
+  font-weight: 700;
+  margin: 0 0 12px 0;
+  background: linear-gradient(to right, #ffffff, #9ca3af);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.hero-subtitle {
+  font-size: 1.2rem;
+  color: var(--text-sub);
+  margin: 0;
+}
+
+/* ==================================================================
+   Dashboard Sections & Cards
+   ================================================================== */
+.section {
+  background: var(--panel-bg);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid var(--panel-border);
+  border-radius: var(--radius-panel);
+  padding: 30px;
+  margin-bottom: 35px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  transition: var(--transition-smooth);
+}
+
+.section:hover {
+  border-color: rgba(99, 102, 241, 0.3);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2), 0 0 15px rgba(99, 102, 241, 0.1);
+}
+
+.form-group-horizontal {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.form-group-horizontal label {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.input-row {
+  display: flex;
+  gap: 12px;
+}
+
+.input-row input[type="text"] {
+  flex: 1;
+  padding: 12px 18px;
+  border: 1px solid var(--panel-border);
+  border-radius: var(--radius-control);
+  font-size: 1rem;
+  background-color: rgba(255, 255, 255, 0.03);
+  color: #ffffff;
+  outline: none;
+  transition: var(--transition-smooth);
+}
+
+.input-row input[type="text"]:focus {
+  border-color: #6366f1;
+  background-color: rgba(255, 255, 255, 0.05);
+  box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2);
+}
+
+/* ==================================================================
+   Outputs
+   ================================================================== */
+.output {
+  background-color: rgba(0, 0, 0, 0.2);
+  border: 1px solid var(--panel-border);
+  border-radius: var(--radius-control);
+  padding: 20px 24px;
+  margin-top: 18px;
+  min-height: 52px;
+  color: #e5e7eb;
+  font-size: 1rem;
+  display: none; /* Hidden dynamically when empty */
+}
+
+/* Show output block when it contains actual text/results */
+.output:not(:empty) {
+  display: block;
+}
+
+.output strong {
+  font-size: 1.05rem;
+  color: #ffffff;
+  border-bottom: 2px solid #6366f1;
+  padding-bottom: 2px;
+}
+
+/* ==================================================================
+   Buttons
+   ================================================================== */
+.btn {
+  background: var(--accent-primary);
+  color: #ffffff;
+  border: none;
+  border-radius: var(--radius-control);
+  padding: 12px 24px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: var(--transition-smooth);
+  box-shadow: 0 4px 6px rgba(99, 102, 241, 0.2);
+}
+
+.btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 12px rgba(99, 102, 241, 0.4), var(--shadow-glow);
+}
+
+.btn-sm {
+  padding: 8px 16px;
+  font-size: 0.88rem;
+}
+
+.btn-outline {
+  background: transparent;
+  color: var(--text-main);
+  border: 1px solid var(--panel-border);
+  box-shadow: none;
+}
+
+.btn-outline:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: #6366f1;
+  color: #ffffff;
+  box-shadow: 0 0 10px rgba(99, 102, 241, 0.15);
+}
+
+/* ==================================================================
+   Interactive Quiz options
+   ================================================================== */
+.quiz-block {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  padding-bottom: 24px;
+  margin-bottom: 24px;
+}
+
+.quiz-block:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+  margin-bottom: 0;
+}
+
+.quiz-option-label {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--panel-border) !important;
+  transition: var(--transition-smooth);
+}
+
+.quiz-option-label:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.2) !important;
+}
+
+.btn-check {
+  background: var(--accent-secondary);
+  padding: 8px 16px;
+  font-size: 0.88rem;
+  border-radius: 4px;
+  box-shadow: 0 4px 6px rgba(168, 85, 247, 0.2);
+}
+
+.btn-check:hover {
+  box-shadow: 0 8px 12px rgba(168, 85, 247, 0.4), 0 0 15px rgba(168, 85, 247, 0.2);
+}
+
+/* ==================================================================
+   Animations
+   ================================================================== */
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* ==================================================================
+   Theme Toggle Floating Button
+   ================================================================== */
+.theme-toggle-btn {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: var(--text-main);
+  font-size: 1.4rem;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition-smooth);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: 1000;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+.theme-toggle-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: scale(1.1);
+}
+
+/* ==================================================================
+   Light Mode Theme Classes & Overrides
+   ================================================================== */
+body.light-theme {
+  --bg-color: #f3f4f6;
+  --bg-gradient: radial-gradient(circle at 50% 50%, #e0e7ff 0%, #f3f4f6 100%);
+  --panel-bg: rgba(255, 255, 255, 0.85);
+  --panel-border: rgba(0, 0, 0, 0.1);
+  --text-main: #1f2937;
+  --text-sub: #4b5563;
+  --shadow-glow: 0 4px 20px rgba(99, 102, 241, 0.1);
+}
+
+/* Floating button light mode overrides */
+body.light-theme .theme-toggle-btn {
+  background: rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+body.light-theme .theme-toggle-btn:hover {
+  background: rgba(0, 0, 0, 0.1);
+}
+
+/* Background decorative light mode orbs */
+body.light-theme::before {
+  background: #c7d2fe;
+}
+body.light-theme::after {
+  background: #f5d0fe;
+}
+
+/* Top nav */
+body.light-theme .top-nav {
+  background: rgba(255, 255, 255, 0.85);
+}
+
+/* Section hover shadows in light mode */
+body.light-theme .section:hover {
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.06), 0 0 15px rgba(99, 102, 241, 0.04);
+}
+
+/* Heading and Titles text fills */
+body.light-theme .hero-title {
+  background: linear-gradient(to right, #1f2937, #4b5563);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+body.light-theme .form-group-horizontal label,
+body.light-theme .auth-card-header h2,
+body.light-theme .auth-logo,
+body.light-theme .logo,
+body.light-theme .user-welcome {
+  color: #1f2937 !important;
+  -webkit-text-fill-color: initial !important;
+  background: none !important;
+}
+
+/* Inputs, Textareas, Select lists in light mode */
+body.light-theme .auth-form-group input,
+body.light-theme .input-row input[type="text"],
+body.light-theme textarea,
+body.light-theme select {
+  background-color: rgba(0, 0, 0, 0.02) !important;
+  color: #1f2937 !important;
+  border-color: rgba(0, 0, 0, 0.12) !important;
+}
+
+body.light-theme .auth-form-group input::placeholder,
+body.light-theme .input-row input[type="text"]::placeholder,
+body.light-theme textarea::placeholder {
+  color: #9ca3af !important;
+}
+
+body.light-theme .auth-form-group input:focus,
+body.light-theme .input-row input[type="text"]:focus,
+body.light-theme textarea:focus {
+  background-color: #ffffff !important;
+  border-color: #6366f1 !important;
+  box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.15) !important;
+}
+
+/* Output result blocks */
+body.light-theme .output {
+  background-color: rgba(0, 0, 0, 0.02) !important;
+  border-color: rgba(0, 0, 0, 0.08) !important;
+  color: #374151 !important;
+}
+
+body.light-theme .output strong {
+  color: #1f2937 !important;
+}
+
+/* Divider block background */
+body.light-theme .divider-text {
+  background-color: #f3f4f6;
+}
+
+/* Authentication card tabs */
+body.light-theme .auth-tabs {
+  background: rgba(0, 0, 0, 0.03);
+  border-color: rgba(0, 0, 0, 0.06);
+}
+
+body.light-theme .auth-tab-btn.active {
+  background: #ffffff;
+  color: #1f2937;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.06);
+}
+
+/* Guest user badges */
+body.light-theme .guest-badge {
+  background-color: rgba(0, 0, 0, 0.04);
+  border-color: rgba(0, 0, 0, 0.06);
+}
+
+/* Quiz Options style overrides in light mode */
+body.light-theme .quiz-option-label {
+  background-color: rgba(0, 0, 0, 0.02);
+  border-color: rgba(0, 0, 0, 0.08) !important;
+  color: #374151 !important;
+}
+
+body.light-theme .quiz-option-label:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+  border-color: rgba(99, 102, 241, 0.3) !important;
+}
+
+body.light-theme .quiz-option-card.selected .quiz-option-label {
+  background-color: rgba(99, 102, 241, 0.1);
+  border-color: #6366f1 !important;
+  color: #4f46e5 !important;
+}
+
