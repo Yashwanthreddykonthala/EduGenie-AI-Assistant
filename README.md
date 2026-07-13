@@ -1,167 +1,135 @@
 # EduGenie Learning Assistant
 
-> A lightweight, AI-powered educational assistant that helps students, self-learners, and educators understand concepts, get quick answers, generate quizzes, summarize material, and receive personalized learning roadmaps — all from a single page, with no page reloads.
+> A premium, hybrid AI-powered educational assistant structured to streamline learning workflows. EduGenie provides dynamic question answering, long-form concept explanations, document summarization, interactive quiz validation, and personalized adaptive learning path recommendations—all delivered via a stunning dark/light glassmorphic single-page workspace.
 
 ---
 
 ## 1. Project Summary
 
-EduGenie combines a cloud LLM (**Gemini 1.5 Pro**) with a local, CPU-friendly model (**LaMini-Flan-T5-783M**) to deliver five focused study tools through one FastAPI backend and a single-page frontend:
+EduGenie integrates cloud intelligence (**Gemini 2.5 Flash**) and local edge processing (**LaMini-Flan-T5-783M**) to deliver high-performance study tools while maintaining absolute data security, zero-cost scaling, and complete cross-device accessibility:
 
-| # | Tool | Model Used | Route |
-|---|------|-----------|-------|
-| 1 | Q&A | Gemini 1.5 Pro | `GET /qa` |
-| 2 | Topic Explanation | LaMini-Flan-T5-783M (local) | `POST /explain` |
-| 3 | Text Summarization | Gemini 1.5 Pro | `POST /summarize` |
-| 4 | Quiz Generation | Gemini 1.5 Pro | `POST /quiz` |
-| 5 | Learning Path / Roadmap | Gemini 1.5 Pro | `GET /learn/recommendations` |
+| # | Tool | Engine Used | Execution Layer | Endpoint |
+|---|---|---|---|---|
+| **1** | Factual Q&A | Gemini 2.5 Flash | Cloud (Generative AI SDK) | `GET /qa` |
+| **2** | Concept Explanation | LaMini-Flan-T5-783M | Local CPU (Hugging Face) | `POST /explain/` |
+| **3** | Text Summarization | Gemini 2.5 Flash | Cloud (Generative AI SDK) | `POST /summarize/` |
+| **4** | MCQ Quiz Builder | Gemini 2.5 Flash | Cloud (Dynamic JSON Schema) | `POST /quiz` |
+| **5** | Adaptive Roadmaps | Gemini 2.5 Flash | Cloud (Generative AI SDK) | `GET /learn/recommendations` |
 
-The hybrid AI strategy keeps the app responsive and cost-efficient: routine explanation requests run locally and offline-capable, while tasks that benefit from stronger reasoning (Q&A, summarization, quiz generation, roadmap planning) call out to Gemini 1.5 Pro.
-
-**Design goal:** make learning interactive, accessible, and efficient across academic levels, while running comfortably on resource-constrained hardware (Intel i3/i5+, 4GB+ RAM, Mac M1 included).
+The project uses a structured, modular FastAPI package layout configured inside the **`5. Project Development Phase`** directory.
 
 ---
 
-## 2. Tech Stack
+## 2. Directory Layout & Repository Structure
 
-| Layer | Technology |
-|---|---|
-| Backend Framework | Python 3.10+, FastAPI, Uvicorn (ASGI server) |
-| Frontend | HTML5, CSS3 (animations), Jinja2 templating, vanilla JavaScript (Fetch API) |
-| Cloud AI Model | Google Gemini 1.5 Pro (`google-generativeai` SDK) |
-| Local AI Model | LaMini-Flan-T5-783M (Hugging Face `transformers` + CPU `torch`) |
-| Database | SQL — PostgreSQL or SQLite (via SQLAlchemy) |
-| Config Management | `python-dotenv` |
-| Tooling | VS Code, Git, GitHub |
-
-**Minimum hardware:** Intel i3/i5 or equivalent, 4GB RAM (8GB recommended), 10GB free storage (for local model weights + dependencies).
-
----
-
-## 3. Modular Folder Architecture
+Following the track template guidelines, the repository is organized into distinct project lifecycle phases:
 
 ```
-edugenie/
-├── main.py                    # FastAPI app: routes, static/template mounting
-├── requirements.txt           # Python dependency list
-├── .env                       # GEMINI_API_KEY (not committed to Git)
-├── .gitignore
+EduGenie-AI-Assistant/
+├── 1. Brainstorming & Ideation/     # Detailed project proposal
+├── 2. Requirement Analysis/         # Software Requirements Specification (SRS)
+├── 3. Project Design Phase/         # Architecture models, wireframes & schemas
+├── 4. Project Planning Phase/       # Milestones scheduling & team WBS matrices
 │
-├── qna.py                     # Q&A module        -> Gemini 1.5 Pro
-├── explanation_module.py      # Explanation module -> LaMini-Flan-T5-783M (local)
-├── summary_module.py          # Summary module     -> Gemini 1.5 Pro
-├── quiz_module.py             # Quiz module        -> Gemini 1.5 Pro + JSON parsing
-├── learning_path.py           # Learning path module -> Gemini 1.5 Pro
+├── 5. Project Development Phase/    # CENTRAL CODEBASE
+│   ├── app/                         # Modular application packages
+│   │   ├── api/                     # Controller routes routers
+│   │   │   ├── auth.py              # OTP Sign Up, Login, and Guest handlers
+│   │   │   └── study.py             # Q&A, Summaries, Quizzes, roadmaps endpoints
+│   │   ├── core/                    # Specialized AI logic wrappers
+│   │   │   ├── explanation.py       # Local transformer setup
+│   │   │   ├── qna.py               # Cloud Q&A driver
+│   │   │   ├── quiz.py              # Quiz prompt engineering
+│   │   │   ├── learning.py          # Roadmap generator
+│   │   │   └── summary.py           # Summarizer driver
+│   │   ├── database.py              # SQLite session connection provider
+│   │   └── models.py                # Database entity schemas (Users, Queries, Quizzes)
+│   │
+│   ├── static/                      # Custom dark/light mode stylesheets
+│   │   └── style.css
+│   ├── templates/                   # Client-side workbook workspaces
+│   │   └── index.html
+│   │
+│   ├── main.py                      # FastAPI startup entry point
+│   ├── requirements.txt             # Python dependencies
+│   └── .env                         # API & Mail credentials (git-ignored)
 │
-├── templates/
-│   └── index.html             # Single-page frontend (5 tool sections + JS)
+├── 6.Project Testing/               # QA test suite cases and bug reports
+├── 7.Project Documentation/         # API guides and user manuals
+├── 8.Project Demonstration/         # Slides, presentation assets & demo links
 │
-└── static/
-    └── style.css               # "Study Workbook" theme stylesheet
+├── .gitignore                       # Structured Git ignore file
+└── README.md                        # Project documentation (this file)
 ```
-
-Each AI module is self-contained: it loads its own `.env` config, initializes its own model client, and exposes one public function (`explain_topic`, `answer_question_with_gemini`, `summarize_text`, `generate_quiz`, `get_learning_recommendations`). `main.py` imports these functions directly and never talks to the models itself — keeping routing and AI logic cleanly separated.
 
 ---
 
-## 4. Installation (Virtual Environment, via VS Code)
+## 3. Technology Stack
 
-### Step 1 — Clone / open the project folder in VS Code
+*   **Backend Core Engine:** Python 3.9+ / FastAPI / Uvicorn
+*   **Database ORM:** SQLAlchemy (SQLite Engine)
+*   **Security & Auth:** Secure SHA-256 Hashing / SMTP-based 6-digit OTP delivery with a 10-minute expiry
+*   **Client Viewport:** Single Page HTML5 / CSS3 Dark-Light Glassmorphic theme / Vanilla JS Asynchronous Fetch
+*   **Cloud Processing:** Google Generative AI SDK (`gemini-2.5-flash` model)
+*   **Local Processing:** Hugging Face `transformers` library (`LaMini-Flan-T5-783M` text-to-text token model)
 
+---
+
+## 4. Local Execution & Set Up
+
+### Step 1: Open the Development Directory
+All runnable source code assets reside inside the Phase 5 directory. Open your terminal and navigate to it:
 ```bash
-cd path/to/edugenie
-code .
+cd "5. Project Development Phase"
 ```
 
-### Step 2 — Create a virtual environment
-
-Open the VS Code integrated terminal (`` Ctrl+` `` / `` Cmd+` ``) and run:
-
-**macOS / Linux:**
+### Step 2: Create a Virtual Environment
+Initialize a clean Python virtual environment to manage dependencies safely:
 ```bash
+# On Windows:
+python -m venv venv
+venv\Scripts\activate
+
+# On macOS/Linux:
 python3 -m venv venv
 source venv/bin/activate
 ```
 
-**Windows (PowerShell):**
-```powershell
-python -m venv venv
-venv\Scripts\Activate.ps1
-```
-
-Once active, your terminal prompt should be prefixed with `(venv)`.
-
-> **VS Code tip:** After creating the venv, open the Command Palette (`Ctrl+Shift+P` / `Cmd+Shift+P`) → **"Python: Select Interpreter"** → choose the interpreter inside `./venv` so linting, debugging, and the integrated terminal all use the same environment.
-
-### Step 3 — Install dependencies
-
+### Step 3: Install Package Dependencies
+Install the required packages listed in the requirements file:
 ```bash
 pip install -r requirements.txt
 ```
+*(First-time runs of the local explanation tool will automatically fetch the ~3GB model weights for `MBZUAI/LaMini-Flan-T5-783M` from Hugging Face Hub).*
 
-> **Apple Silicon (M1/M2) note:** `requirements.txt` pins a `+cpu` torch build intended for x86 machines. On Apple Silicon, instead run:
-> ```bash
-> pip install torch torchvision torchaudio
-> ```
-> then install the rest of `requirements.txt` as usual — the default PyPI torch build already runs on M1/M2 via the MPS backend.
-
-### Step 4 — Configure environment variables
-
-Create a `.env` file in the project root:
-
+### Step 4: Configure the Environment Secrets
+Create a file named `.env` in the `5. Project Development Phase/` directory. Specify your access credentials:
 ```env
+# Gemini API Key (obtain from Google AI Studio)
 GEMINI_API_KEY=your_gemini_api_key_here
+
+# SMTP configuration for email verification OTPs
+SMTP_HOST=smtp.gmail.com
+SMTP_PORT=587
+SMTP_USER=your_gmail_address@gmail.com
+SMTP_PASSWORD=your_gmail_app_password
 ```
 
-Each AI module (`qna.py`, `summary_module.py`, `quiz_module.py`, `learning_path.py`) reads this key independently via `python-dotenv`, and will raise a clear `EnvironmentError` at startup if it's missing.
-
-### Step 5 — First-run note on the local model
-
-The first time the app starts, `explanation_module.py` will download **MBZUAI/LaMini-Flan-T5-783M** (~3GB) from the Hugging Face Hub and cache it locally. This can take a few minutes depending on your connection; subsequent runs load instantly from cache.
-
----
-
-## 5. Running the Server Locally
-
-With the virtual environment active and dependencies installed:
-
+### Step 5: Boot the Server
+Start the Uvicorn hot-reload server:
 ```bash
-uvicorn main:app --reload
+uvicorn main:app --host 0.0.0.0 --port 8000 --reload
 ```
-
-- `--reload` enables hot-reloading on code changes (development only — omit it in production).
-- The app will be available at: **http://127.0.0.1:8000**
-
-Open that URL in your browser to use all five tools from the single-page interface. No page reloads occur during use — all forms submit asynchronously via the Fetch API.
-
-### Quick sanity check
-
-If the server starts without errors and the workbook-themed homepage renders with all five chapters (Q&A, Explanation, Summarization, Quiz, Learning Path), your setup is complete.
+Open **`http://127.0.0.1:8000`** in your browser. You can also view it on mobile devices connected to your local network by opening `http://your-local-ip:8000`.
 
 ---
 
-## 6. Project Stats
+## 5. Team & Engineering Credits
 
-- **Epics:** 8
-- **Tasks:** 11
-- **Core Entities (ER Model):** USER, USER_QUERY, AI_RESPONSE, QUIZ, SUMMARY, LEARNING_PATH
-
----
-
-## 7. Team & Credits
-
-| Role | Name |
+| Phase Milestone Module | Lead Assigned Engineer |
 |---|---|
-| **Team Lead** | Velamala Preetham |
-| Member | Konathala Divyateja |
-| Member | Pavan Kumar Reddy Yerram |
-| Member | Gandepalli Radha Krishna |
-| Member | Yashwanth Reddy Konthala |
-
-Built with care by the EduGenie team as a modular, resource-conscious learning assistant — designed to run efficiently on everyday student hardware while still leveraging state-of-the-art generative AI where it matters most.
-
----
-
-## 8. License
-
-*Add your chosen license here (e.g. MIT, Apache 2.0) before publishing this repository publicly.*
+| **Architecture Sandbox & Environments** | Velamala Preetham |
+| **Local Inference Optimization** | Konathala Divyateja |
+| **Cloud Reasoning Prompting & Quizzes** | Pavan Kumar Reddy Yerram |
+| **FastAPI Core Routing & Databases** | Gandepalli Radha Krishna |
+| **UI Design, Glassmorphism & Themes** | Yashwanth Reddy Konthala |
