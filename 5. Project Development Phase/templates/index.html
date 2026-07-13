@@ -8,17 +8,191 @@
 </head>
 <body>
 
-  <!-- Theme Toggle Floating Button -->
-  <button id="themeToggleBtn" onclick="toggleTheme()" class="theme-toggle-btn" aria-label="Toggle Theme">🌙</button>
+  <!-- ============================================================ -->
+  <!-- GLOBAL HEADER NAVBAR -->
+  <!-- ============================================================ -->
+  <header class="top-nav">
+    <div class="top-nav-container">
+      <a href="#" onclick="goHome(event)" class="logo"><img src="{{ url_for('static', path='edu_robot_logo_transparent.png') }}" alt="EduGenie Logo" style="height: 38px; width: auto;"></a>
+      
+      <ul class="nav-links">
+        <li><a onclick="handleNavClick('home')" class="nav-link">Home</a></li>
+        <li><a onclick="handleNavClick('features')" class="nav-link">Features</a></li>
+        <li><a onclick="handleNavClick('about')" class="nav-link">About Us</a></li>
+        <li><a onclick="handleNavClick('team')" class="nav-link">Team</a></li>
+      </ul>
+      
+      <div class="auth-section">
+        <!-- Logged out states -->
+        <span id="headerLoggedOut" style="display: flex; align-items: center;">
+          <a onclick="openAuthModal('login')" class="login-link-header">Login</a>
+          <button onclick="openAuthModal('register')" class="btn-signup-header" style="margin-left: 15px;">Sign Up</button>
+        </span>
+        
+        <!-- Logged in states -->
+        <span id="headerLoggedIn" style="display: none; align-items: center; gap: 15px;">
+          <span class="user-welcome">Welcome, <strong id="authName"></strong>!</span>
+          <span id="guestBadge" class="guest-badge" style="display: none;">Guest Mode Active</span>
+          <button onclick="toggleWorkspaceView(true)" class="btn btn-sm" id="btnGoToWorkspace" style="background: var(--accent-primary); border: none; font-weight: 600;">Workspace</button>
+          <button onclick="logout()" class="btn btn-sm btn-outline">Sign Out</button>
+        </span>
+        
+        <!-- Theme Toggle -->
+        <button id="themeToggleBtn" onclick="toggleTheme()" class="btn btn-sm btn-outline" style="border-radius: 50%; padding: 0; width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; font-size: 1rem; margin-left: 5px;">🌙</button>
+      </div>
+    </div>
+  </header>
 
   <!-- ============================================================ -->
-  <!-- DEDICATED AUTHENTICATION SCREEN (Shown Separately) -->
+  <!-- LANDING PAGE (Shown when Logged Out or Viewing Landing Page) -->
   <!-- ============================================================ -->
-  <div id="authScreen" class="auth-screen-container" style="display: flex;">
+  <div id="landingPage" style="display: none;">
+    <canvas id="particlesCanvas"></canvas>
+    
+    <!-- Hero Section -->
+    <section class="landing-section hero-container" id="homeSection">
+      <div class="hero-text-side">
+        <h1 class="landing-hero-title">Your AI-Powered Study Companion</h1>
+        <p class="landing-hero-subtitle">EduGenie blends high-performance cloud AI with private local models to provide instant Q&As, detailed summaries, adaptive concept explanations, quizzes, and roadmap recommendations tailored for you.</p>
+        <button onclick="handleHeroCTA()" class="btn-get-started">Get Started</button>
+      </div>
+      <div class="hero-media-side">
+        <img src="{{ url_for('static', path='edu_robot_logo_transparent.png') }}" alt="EduGenie Chatbot Logo" class="landing-robot-img">
+      </div>
+    </section>
+
+    <!-- Features Showcase Section -->
+    <section class="landing-section" id="featuresSection">
+      <h2 class="section-title">Core AI Learning Tools</h2>
+      <p class="section-subtitle">Unlock private, adaptive learning utilities crafted to accelerate your comprehension and retain knowledge effectively.</p>
+      
+      <div class="features-showcase-grid">
+        <!-- Card 1: Q&A -->
+        <div class="feature-showcase-card">
+          <div>
+            <span class="feature-icon-wrapper">💬</span>
+            <h3 class="feature-card-title">Instant Q&A</h3>
+            <p class="feature-card-desc">Ask your toughest study questions and get fast, accurate explanations backed by Gemini 2.5 Flash.</p>
+          </div>
+          <button onclick="handleFeatureClick('qa')" class="btn-feature-try">Try Q&A</button>
+        </div>
+        
+        <!-- Card 2: Concept Explainer -->
+        <div class="feature-showcase-card">
+          <div>
+            <span class="feature-icon-wrapper">💡</span>
+            <h3 class="feature-card-title">Concept Explainer</h3>
+            <p class="feature-card-desc">Need a topic broken down step-by-step? Get simplified local explanations powered by LaMini-Flan-T5.</p>
+          </div>
+          <button onclick="handleFeatureClick('explain')" class="btn-feature-try">Try Explainer</button>
+        </div>
+
+        <!-- Card 3: Summarizer -->
+        <div class="feature-showcase-card">
+          <div>
+            <span class="feature-icon-wrapper">📝</span>
+            <h3 class="feature-card-title">Text Summarizer</h3>
+            <p class="feature-card-desc">Paste long textbook passages or documents and condense them into structured, readable key points.</p>
+          </div>
+          <button onclick="handleFeatureClick('summarize')" class="btn-feature-try">Try Summarizer</button>
+        </div>
+
+        <!-- Card 4: Quiz Generator -->
+        <div class="feature-showcase-card">
+          <div>
+            <span class="feature-icon-wrapper">✏️</span>
+            <h3 class="feature-card-title">Quiz Generator</h3>
+            <p class="feature-card-desc">Test your understanding by generating multiple-choice quizzes on any specific topic instantly.</p>
+          </div>
+          <button onclick="handleFeatureClick('quiz')" class="btn-feature-try">Try Quiz</button>
+        </div>
+
+        <!-- Card 5: Learning Roadmap -->
+        <div class="feature-showcase-card">
+          <div>
+            <span class="feature-icon-wrapper">🗺️</span>
+            <h3 class="feature-card-title">Learning Roadmap</h3>
+            <p class="feature-card-desc">Get tailored difficulty recommendations and study path recommendations for complex skills.</p>
+          </div>
+          <button onclick="handleFeatureClick('recommend')" class="btn-feature-try">Try Roadmap</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- About Us Section -->
+    <section class="landing-section" id="aboutSection">
+      <div class="about-container">
+        <div class="about-text-side">
+          <h2 class="section-title" style="text-align: left; margin-bottom: 25px;">Why EduGenie?</h2>
+          <p>EduGenie is a cutting-edge educational assistant built to support students' learning paths. We recognize that sometimes you need the power of state-of-the-art cloud language models, while other times you require speed and resource efficiency.</p>
+          <p>By leveraging a hybrid architecture, EduGenie executes heavy reasoning tasks on Gemini in the cloud while delegating concept explanations to a lightweight, dedicated model running locally. This makes advanced AI tutoring more accessible, cost-effective, and fast.</p>
+        </div>
+        <div class="about-visual-side">
+          <div class="architecture-badge">Hybrid AI Architecture</div>
+          <ul class="architecture-list">
+            <li class="architecture-item">
+              <span class="architecture-icon">☁️</span>
+              <div>
+                <h4 class="architecture-title">Cloud AI (Gemini 2.5 Flash)</h4>
+                <p class="architecture-desc">Powers real-time Q&A, adaptive quizzes, summarizations, and complex resource roadmap recommendation trees.</p>
+              </div>
+            </li>
+            <li class="architecture-item">
+              <span class="architecture-icon">💻</span>
+              <div>
+                <h4 class="architecture-title">Local AI (LaMini-Flan-T5-783M)</h4>
+                <p class="architecture-desc">Executes fast, resource-friendly conceptual explanations locally on your CPU/GPU.</p>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- Team Section -->
+    <section class="landing-section" id="teamSection">
+      <h2 class="section-title">Meet Our Team</h2>
+      <p class="section-subtitle">The dedicated full-stack developers and AI researchers behind EduGenie.</p>
+      
+      <div class="team-grid">
+        <!-- Team 1 -->
+        <div class="team-card">
+          <div class="team-avatar-placeholder">P</div>
+          <h3 class="team-name">Preetham</h3>
+        </div>
+        <!-- Team 2 -->
+        <div class="team-card">
+          <div class="team-avatar-placeholder">D</div>
+          <h3 class="team-name">Divyateja</h3>
+        </div>
+        <!-- Team 3 -->
+        <div class="team-card">
+          <div class="team-avatar-placeholder">P</div>
+          <h3 class="team-name">Pavan</h3>
+        </div>
+        <!-- Team 4 -->
+        <div class="team-card">
+          <div class="team-avatar-placeholder">R</div>
+          <h3 class="team-name">Radha Krishna</h3>
+        </div>
+        <!-- Team 5 -->
+        <div class="team-card">
+          <div class="team-avatar-placeholder">Y</div>
+          <h3 class="team-name">Yashwanth</h3>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- DEDICATED AUTHENTICATION MODAL (Shown as Popup) -->
+  <!-- ============================================================ -->
+  <div id="authModal" class="modal-overlay">
     <div class="auth-card">
+      <button onclick="closeAuthModal()" class="modal-close-btn" aria-label="Close modal">&times;</button>
       <div class="auth-card-header">
         <div class="auth-logo">EduGenie 🧠✨</div>
-        <p class="auth-subtitle">Your personal AI tutor for learning support!</p>
+        <p class="auth-subtitle" id="authSubtitleText">Sign In to access all features!</p>
       </div>
 
       <div class="auth-tabs">
@@ -87,97 +261,135 @@
   </div>
 
   <!-- ============================================================ -->
-  <!-- MAIN APP WORKSPACE DASHBOARD (Hidden until Logged In) -->
+  <!-- SAAS WORKSPACE DASHBOARD (Gated & Tabbed Left Sidebar) -->
   <!-- ============================================================ -->
-  <div id="mainDashboard" style="display: none;">
-    <!-- Top Navigation Bar -->
-    <header class="top-nav">
-      <div class="top-nav-container">
-        <div class="logo">EduGenie 🧠✨</div>
-        <div class="auth-section">
-          <span class="user-welcome">Welcome, <strong id="authName"></strong>!</span>
-          <span id="guestBadge" class="guest-badge" style="display: none; margin-left: 10px; margin-right: 10px;">Guest Mode Active</span>
-          <button onclick="logout()" class="btn btn-sm btn-outline">Sign Out</button>
+  <div id="workspaceDashboard" style="display: none;">
+    <div class="workspace-container">
+      <!-- Left Sidebar Nav -->
+      <aside class="workspace-sidebar">
+        <div>
+          <div class="logo" style="margin-bottom: 30px; font-size: 1.35rem;">Workspace 🧠</div>
+          <ul class="workspace-nav">
+            <li>
+              <button onclick="switchWorkspaceTab('qa')" id="ws-nav-qa" class="workspace-nav-btn active">
+                <span>💬</span> Q&A
+              </button>
+            </li>
+            <li>
+              <button onclick="switchWorkspaceTab('explain')" id="ws-nav-explain" class="workspace-nav-btn">
+                <span>💡</span> Concept Explainer
+              </button>
+            </li>
+            <li>
+              <button onclick="switchWorkspaceTab('summarize')" id="ws-nav-summarize" class="workspace-nav-btn">
+                <span>📝</span> Text Summarizer
+              </button>
+            </li>
+            <li>
+              <button onclick="switchWorkspaceTab('quiz')" id="ws-nav-quiz" class="workspace-nav-btn">
+                <span>✏️</span> Quiz Generator
+              </button>
+            </li>
+            <li>
+              <button onclick="switchWorkspaceTab('recommend')" id="ws-nav-recommend" class="workspace-nav-btn">
+                <span>🗺️</span> Learning Roadmap
+              </button>
+            </li>
+          </ul>
         </div>
-      </div>
-    </header>
+        
+        <div class="workspace-sidebar-footer">
+          <button onclick="toggleWorkspaceView(false)" class="workspace-nav-btn" style="color: #6366f1;">
+            <span>🏠</span> Back to Home
+          </button>
+          <button onclick="logout()" class="workspace-nav-btn" style="color: var(--color-error);">
+            <span>🚪</span> Sign Out
+          </button>
+        </div>
+      </aside>
 
-    <!-- Main Workspace Container -->
-    <div class="container">
-      <div class="hero">
-        <h1 class="hero-title">Welcome to EduGenie 🧠✨</h1>
-        <p class="hero-subtitle">Your personal AI tutor for learning support!</p>
-      </div>
-
-      <!-- 01. Q&A -->
-      <section class="section">
-        <form id="qaForm" class="tool-form">
-          <div class="form-group-horizontal">
-            <label for="question"><strong>Ask EduGenie a Question:</strong></label>
-            <div class="input-row">
-              <input type="text" id="question" placeholder="Why is the sky blue?" required>
-              <button type="submit" class="btn">Get Answer</button>
+      <!-- Right Main Workspace Content area -->
+      <main class="workspace-content">
+        <!-- 01. Q&A Panel -->
+        <div id="panel-qa" class="workspace-panel active">
+          <h2 class="workspace-tool-title">Instant Q&A</h2>
+          <p class="workspace-tool-desc">Enter any general academic question below. Powered by Google Gemini 1.5/2.5 Flash API in the cloud.</p>
+          <form id="qaForm" class="tool-form">
+            <div class="form-group-horizontal">
+              <label for="question"><strong>Ask EduGenie a Question:</strong></label>
+              <div class="input-row">
+                <input type="text" id="question" placeholder="Why is the sky blue?" required>
+                <button type="submit" class="btn">Get Answer</button>
+              </div>
             </div>
-          </div>
-        </form>
-        <div id="qaResult" class="output"></div>
-      </section>
+          </form>
+          <div id="qaResult" class="output"></div>
+        </div>
 
-      <!-- 02. Explanation -->
-      <section class="section">
-        <form id="explainForm" class="tool-form">
-          <div class="form-group-horizontal">
-            <label for="topic"><strong>Need an Explanation?</strong></label>
-            <div class="input-row">
-              <input type="text" id="topic" placeholder="Photosynthesis" required>
-              <button type="submit" class="btn">Explain</button>
+        <!-- 02. Concept Explainer Panel -->
+        <div id="panel-explain" class="workspace-panel">
+          <h2 class="workspace-tool-title">Concept Explainer</h2>
+          <p class="workspace-tool-desc">Provide a complex topic below. Instantly broken down step-by-step using your local CPU resources via HuggingFace's LaMini-Flan-T5 model.</p>
+          <form id="explainForm" class="tool-form">
+            <div class="form-group-horizontal">
+              <label for="topic"><strong>Need an Explanation?</strong></label>
+              <div class="input-row">
+                <input type="text" id="topic" placeholder="Photosynthesis" required>
+                <button type="submit" class="btn">Explain</button>
+              </div>
             </div>
-          </div>
-        </form>
-        <div id="explanationResult" class="output"></div>
-      </section>
+          </form>
+          <div id="explanationResult" class="output"></div>
+        </div>
 
-      <!-- 03. Summarization -->
-      <section class="section">
-        <form id="summaryForm" class="tool-form">
-          <div class="form-group-horizontal">
-            <label for="summaryText"><strong>Summarize a Paragraph:</strong></label>
-            <div class="input-row">
-              <input type="text" id="summaryText" placeholder="Paste long content to summarize" required>
-              <button type="submit" class="btn">Summarize</button>
+        <!-- 03. Text Summarizer Panel -->
+        <div id="panel-summarize" class="workspace-panel">
+          <h2 class="workspace-tool-title">Text Summarizer</h2>
+          <p class="workspace-tool-desc">Paste long paragraphs, notes, or articles. Get structured, readable summaries built dynamically using Gemini cloud language models.</p>
+          <form id="summaryForm" class="tool-form">
+            <div class="form-group-horizontal">
+              <label for="summaryText"><strong>Summarize a Paragraph:</strong></label>
+              <div class="input-row">
+                <input type="text" id="summaryText" placeholder="Paste long content to summarize" required>
+                <button type="submit" class="btn">Summarize</button>
+              </div>
             </div>
-          </div>
-        </form>
-        <div id="summaryResult" class="output"></div>
-      </section>
+          </form>
+          <div id="summaryResult" class="output"></div>
+        </div>
 
-      <!-- 04. Quiz -->
-      <section class="section">
-        <form id="quizForm" class="tool-form">
-          <div class="form-group-horizontal">
-            <label for="quizText"><strong>Generate a Quiz:</strong></label>
-            <div class="input-row">
-              <input type="text" id="quizText" placeholder="Solar System" required>
-              <button type="submit" class="btn">Generate Quiz</button>
+        <!-- 04. Quiz Generator Panel -->
+        <div id="panel-quiz" class="workspace-panel">
+          <h2 class="workspace-tool-title">Quiz Generator</h2>
+          <p class="workspace-tool-desc">Enter a subject or concept. Instantly generate interactive multiple-choice quizzes with explanations to check your understanding.</p>
+          <form id="quizForm" class="tool-form">
+            <div class="form-group-horizontal">
+              <label for="quizText"><strong>Generate a Quiz:</strong></label>
+              <div class="input-row">
+                <input type="text" id="quizText" placeholder="Solar System" required>
+                <button type="submit" class="btn">Generate Quiz</button>
+              </div>
             </div>
-          </div>
-        </form>
-        <div id="quizResult" class="output"></div>
-      </section>
+          </form>
+          <div id="quizResult" class="output"></div>
+        </div>
 
-      <!-- 05. Learning Recommendations -->
-      <section class="section">
-        <form id="recommendForm" class="tool-form">
-          <div class="form-group-horizontal">
-            <label for="recommendTopic"><strong>Get Learning Recommendations:</strong></label>
-            <div class="input-row">
-              <input type="text" id="recommendTopic" placeholder="e.g. Linear Regression" required>
-              <button type="submit" class="btn">Get Recommendations</button>
+        <!-- 05. Learning Roadmap Panel -->
+        <div id="panel-recommend" class="workspace-panel">
+          <h2 class="workspace-tool-title">Learning Roadmap</h2>
+          <p class="workspace-tool-desc">Type in any skill or subject you want to master. Receive a personalized adaptive learning plan with structured resource references.</p>
+          <form id="recommendForm" class="tool-form">
+            <div class="form-group-horizontal">
+              <label for="recommendTopic"><strong>Get Learning Recommendations:</strong></label>
+              <div class="input-row">
+                <input type="text" id="recommendTopic" placeholder="e.g. Linear Regression" required>
+                <button type="submit" class="btn">Get Recommendations</button>
+              </div>
             </div>
-          </div>
-        </form>
-        <div id="recommendResult" class="output"></div>
-      </section>
+          </form>
+          <div id="recommendResult" class="output"></div>
+        </div>
+      </main>
     </div>
   </div>
 
@@ -185,17 +397,21 @@
   <!-- JAVASCRIPT: Auth Flows, Fetch API, and Quiz Evaluators -->
   <!-- ============================================================ -->
   <script>
+    let isUserLoggedIn = false;
+    let isWorkspaceActive = false;
+
     // Check session on startup
     async function checkCurrentUser() {
       try {
         const response = await fetch('/current-user');
         const data = await response.json();
         
-        const authScreen = document.getElementById('authScreen');
-        const mainDashboard = document.getElementById('mainDashboard');
+        const headerLoggedOut = document.getElementById('headerLoggedOut');
+        const headerLoggedIn = document.getElementById('headerLoggedIn');
         const guestBadge = document.getElementById('guestBadge');
         
         if (data.logged_in) {
+          isUserLoggedIn = true;
           document.getElementById('authName').textContent = data.name;
           
           if (data.email === 'guest@edugenie.com') {
@@ -204,17 +420,288 @@
             guestBadge.style.display = 'none';
           }
           
-          // Toggle screens
-          authScreen.style.display = 'none';
-          mainDashboard.style.display = 'block';
+          headerLoggedOut.style.display = 'none';
+          headerLoggedIn.style.display = 'flex';
+          closeAuthModal();
+          
+          // Show workspace by default when logged in
+          toggleWorkspaceView(true);
         } else {
-          // Toggle screens
-          authScreen.style.display = 'flex';
-          mainDashboard.style.display = 'none';
+          isUserLoggedIn = false;
+          headerLoggedOut.style.display = 'flex';
+          headerLoggedIn.style.display = 'none';
+          
+          // Revert to landing page when logged out
+          toggleWorkspaceView(false);
         }
       } catch (err) {
         console.error("Auth status validation check failed:", err);
       }
+    }
+
+    // Modal Controls
+    function openAuthModal(tab, customText) {
+      const modal = document.getElementById('authModal');
+      const subtitle = document.getElementById('authSubtitleText');
+      if (customText) {
+        subtitle.textContent = customText;
+      } else {
+        subtitle.textContent = "Sign In to access all features!";
+      }
+      modal.classList.add('active');
+      switchAuthTab(tab);
+    }
+    
+    function closeAuthModal() {
+      const modal = document.getElementById('authModal');
+      modal.classList.remove('active');
+    }
+    
+    // Close modal on background click
+    window.addEventListener('click', (e) => {
+      const modal = document.getElementById('authModal');
+      if (e.target === modal) {
+        closeAuthModal();
+      }
+    });
+
+    // SaaS Workspace Toggles
+    function toggleWorkspaceView(showWorkspace) {
+      const landingPage = document.getElementById('landingPage');
+      const workspaceDashboard = document.getElementById('workspaceDashboard');
+      
+      if (showWorkspace && isUserLoggedIn) {
+        landingPage.style.display = 'none';
+        workspaceDashboard.style.display = 'block';
+        isWorkspaceActive = true;
+        
+        // Remove active class from landing nav links
+        document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
+      } else {
+        landingPage.style.display = 'block';
+        workspaceDashboard.style.display = 'none';
+        isWorkspaceActive = false;
+        
+        // Resize canvas after layout change
+        setTimeout(resizeCanvas, 50);
+      }
+    }
+
+    function switchWorkspaceTab(tabId) {
+      // Hide all panels
+      document.querySelectorAll('.workspace-panel').forEach(panel => {
+        panel.classList.remove('active');
+      });
+      
+      // Remove active states from sidebar buttons
+      document.querySelectorAll('.workspace-nav-btn').forEach(btn => {
+        btn.classList.remove('active');
+      });
+      
+      // Show target panel and highlight button
+      const targetPanel = document.getElementById(`panel-${tabId}`);
+      const targetBtn = document.getElementById(`ws-nav-${tabId}`);
+      if (targetPanel && targetBtn) {
+        targetPanel.classList.add('active');
+        targetBtn.classList.add('active');
+      }
+    }
+
+    // Gated Actions
+    function handleHeroCTA() {
+      if (isUserLoggedIn) {
+        toggleWorkspaceView(true);
+      } else {
+        openAuthModal('register', 'Create an account to start studying with EduGenie!');
+      }
+    }
+
+    function handleFeatureClick(featureKey) {
+      if (isUserLoggedIn) {
+        toggleWorkspaceView(true);
+        switchWorkspaceTab(featureKey);
+      } else {
+        openAuthModal('register', `Create a new account to unlock the ${featureKey.toUpperCase()} tool!`);
+      }
+    }
+
+    // Header Links Navigation
+    function goHome(e) {
+      if (e) e.preventDefault();
+      toggleWorkspaceView(false);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function handleNavClick(section) {
+      // Close workspace view first
+      toggleWorkspaceView(false);
+      
+      let targetId = '';
+      switch(section) {
+        case 'home': targetId = 'homeSection'; break;
+        case 'features': targetId = 'featuresSection'; break;
+        case 'about': targetId = 'aboutSection'; break;
+        case 'team': targetId = 'teamSection'; break;
+      }
+      
+      const targetEl = document.getElementById(targetId);
+      if (targetEl) {
+        targetEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }
+
+    // Highlights Active Section in Nav Header
+    const observerOptions = {
+      root: null,
+      rootMargin: '-20% 0px -60% 0px',
+      threshold: 0
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      if (isWorkspaceActive) return;
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const sectionId = entry.target.id;
+          let navKey = '';
+          switch(sectionId) {
+            case 'homeSection': navKey = 'home'; break;
+            case 'featuresSection': navKey = 'features'; break;
+            case 'aboutSection': navKey = 'about'; break;
+            case 'teamSection': navKey = 'team'; break;
+          }
+          if (navKey) {
+            document.querySelectorAll('.nav-link').forEach(link => {
+              link.classList.remove('active');
+              if (link.getAttribute('onclick').includes(`'${navKey}'`)) {
+                link.classList.add('active');
+              }
+            });
+          }
+        }
+      });
+    }, observerOptions);
+
+    window.addEventListener('DOMContentLoaded', () => {
+      const sections = ['homeSection', 'featuresSection', 'aboutSection', 'teamSection'];
+      sections.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) observer.observe(el);
+      });
+    });
+
+    // Canvas Particles System
+    let canvas, ctx;
+    let particles = [];
+    const particleCount = 75;
+    const connectionDistance = 125;
+    let mouse = { x: null, y: null, radius: 150 };
+
+    function initCanvasParticles() {
+      canvas = document.getElementById('particlesCanvas');
+      if (!canvas) return;
+      ctx = canvas.getContext('2d');
+      
+      resizeCanvas();
+      window.addEventListener('resize', resizeCanvas);
+      
+      // Initialize particles
+      particles = [];
+      for (let i = 0; i < particleCount; i++) {
+        particles.push(new Particle());
+      }
+      
+      // Mouse listeners
+      window.addEventListener('mousemove', (e) => {
+        const rect = canvas.getBoundingClientRect();
+        mouse.x = e.clientX - rect.left;
+        mouse.y = e.clientY - rect.top;
+      });
+      
+      window.addEventListener('mouseout', () => {
+        mouse.x = null;
+        mouse.y = null;
+      });
+      
+      requestAnimationFrame(animateCanvas);
+    }
+
+    function resizeCanvas() {
+      if (!canvas) return;
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+
+    class Particle {
+      constructor() {
+        this.x = Math.random() * window.innerWidth;
+        this.y = Math.random() * window.innerHeight;
+        this.vx = (Math.random() - 0.5) * 1.1;
+        this.vy = (Math.random() - 0.5) * 1.1;
+        this.radius = Math.random() * 2 + 1.5;
+      }
+      update() {
+        this.x += this.vx;
+        this.y += this.vy;
+        
+        if (this.x < 0 || this.x > canvas.width) this.vx = -this.vx;
+        if (this.y < 0 || this.y > canvas.height) this.vy = -this.vy;
+      }
+      draw(color) {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+        ctx.fillStyle = color;
+        ctx.fill();
+      }
+    }
+
+    function animateCanvas() {
+      if (!canvas || document.getElementById('landingPage').style.display === 'none') {
+        requestAnimationFrame(animateCanvas);
+        return;
+      }
+      
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      
+      const isLight = document.body.classList.contains('light-theme');
+      const particleColor = isLight ? 'rgba(79, 70, 229, 0.6)' : 'rgba(0, 240, 255, 0.7)';
+      const lineColorTemplate = isLight ? '79, 70, 229' : '0, 240, 255';
+      
+      particles.forEach(p => {
+        p.update();
+        p.draw(particleColor);
+      });
+      
+      for (let i = 0; i < particles.length; i++) {
+        for (let j = i + 1; j < particles.length; j++) {
+          const dx = particles[i].x - particles[j].x;
+          const dy = particles[i].y - particles[j].y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < connectionDistance) {
+            ctx.beginPath();
+            ctx.moveTo(particles[i].x, particles[i].y);
+            ctx.lineTo(particles[j].x, particles[j].y);
+            ctx.strokeStyle = `rgba(${lineColorTemplate}, ${0.5 * (1 - dist / connectionDistance)})`;
+            ctx.lineWidth = 0.5;
+            ctx.stroke();
+          }
+        }
+        
+        if (mouse.x !== null && mouse.y !== null) {
+          const dx = particles[i].x - mouse.x;
+          const dy = particles[i].y - mouse.y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < mouse.radius) {
+            ctx.beginPath();
+            ctx.moveTo(particles[i].x, particles[i].y);
+            ctx.lineTo(mouse.x, mouse.y);
+            ctx.strokeStyle = `rgba(${lineColorTemplate}, ${0.6 * (1 - dist / mouse.radius)})`;
+            ctx.lineWidth = 0.8;
+            ctx.stroke();
+          }
+        }
+      }
+      
+      requestAnimationFrame(animateCanvas);
     }
 
     // Global Verification state
@@ -712,7 +1199,10 @@
     });
 
     // Run auth state check on load
-    window.addEventListener('DOMContentLoaded', checkCurrentUser);
+    window.addEventListener('DOMContentLoaded', () => {
+      checkCurrentUser();
+      initCanvasParticles();
+    });
 
     // Dark/Light Mode Theme Toggle Functions
     function toggleTheme() {
@@ -720,11 +1210,11 @@
       const btn = document.getElementById('themeToggleBtn');
       if (body.classList.contains('light-theme')) {
         body.classList.remove('light-theme');
-        btn.textContent = '🌙';
+        if (btn) btn.textContent = '🌙';
         localStorage.setItem('theme', 'dark');
       } else {
         body.classList.add('light-theme');
-        btn.textContent = '☀️';
+        if (btn) btn.textContent = '☀️';
         localStorage.setItem('theme', 'light');
       }
     }
@@ -734,10 +1224,12 @@
       const savedTheme = localStorage.getItem('theme') || 'dark';
       if (savedTheme === 'light') {
         document.body.classList.add('light-theme');
-        document.getElementById('themeToggleBtn').textContent = '☀️';
+        const btn = document.getElementById('themeToggleBtn');
+        if (btn) btn.textContent = '☀️';
       } else {
         document.body.classList.remove('light-theme');
-        document.getElementById('themeToggleBtn').textContent = '🌙';
+        const btn = document.getElementById('themeToggleBtn');
+        if (btn) btn.textContent = '🌙';
       }
     })();
   </script>
