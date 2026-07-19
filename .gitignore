@@ -4,7 +4,6 @@
 
 # --- Secrets / environment config ---
 .env
-.env.*
 
 # --- Python virtual environment ---
 venv/
