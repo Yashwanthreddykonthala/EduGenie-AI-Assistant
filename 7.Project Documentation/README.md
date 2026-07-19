@@ -103,7 +103,7 @@ pip install -r requirements.txt
 *(First-time runs of the local explanation tool will automatically fetch the ~3GB model weights for `MBZUAI/LaMini-Flan-T5-783M` from Hugging Face Hub).*
 
 ### Step 4: Configure the Environment Secrets
-Create a file named `.env` in the `5. Project Development Phase/` directory. Specify your access credentials:
+Create a file named `.env` and copy the content of `.env.example` in the `5. Project Development Phase/` directory. Specify your access credentials:
 ```env
 # Gemini API Key (obtain from Google AI Studio)
 GEMINI_API_KEY=your_gemini_api_key_here
