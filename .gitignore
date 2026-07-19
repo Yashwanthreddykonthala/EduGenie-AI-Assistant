@@ -5,7 +5,6 @@
 # --- Secrets / environment config ---
 .env
 .env.*
-!.env.example
 
 # --- Python virtual environment ---
 venv/
